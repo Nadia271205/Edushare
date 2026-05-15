@@ -8,83 +8,92 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:paddingBottom="16dp">
 
-        <!-- IMAGE THUMBNAIL (TAMBAHKAN INI) -->
         <ImageView
             android:id="@+id/ivThumbnail"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/placeholder_image"
-            android:background="#E0E0E0"/>
+            android:src="@drawable/m3_split_button_chevron_avd"
+            android:background="#E0E0E0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Konten teks di dalam LinearLayout kedua -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvMapel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:text="Comp Sci"
+            android:textColor="#FF6200EE"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/ivThumbnail"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/tvMapel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Comp Sci"
-                android:textColor="#FF6200EE"
-                android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tvJudul"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Matematika"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tvMapel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:id="@+id/tvJudul"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Matematika"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/tvDeskripsi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Visual guide to traversing..."
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tvJudul"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:id="@+id/tvDeskripsi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Visual guide to traversing..."
-                android:layout_marginTop="8dp"/>
+        <ImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_profile"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tvDeskripsi"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="12dp">
+        <TextView
+            android:id="@+id/tvAuthor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Alex K."
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/ivProfile"
+            app:layout_constraintTop_toTopOf="@id/ivProfile"
+            app:layout_constraintBottom_toBottomOf="@id/ivProfile"
+            app:layout_constraintEnd_toStartOf="@id/tvReview" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_profile"
-                    android:tint="#888888"
-                    android:layout_marginEnd="8dp"/>
+        <TextView
+            android:id="@+id/tvReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[Review]"
+            android:textColor="#FF6200EE"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivProfile"
+            app:layout_constraintBottom_toBottomOf="@id/ivProfile" />
 
-                <TextView
-                    android:id="@+id/tvAuthor"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Alex K."/>
-
-
-
-                <TextView
-                    android:id="@+id/tvReview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="[Review]"
-                    android:textColor="#FF6200EE"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

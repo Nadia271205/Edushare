@@ -3,25 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_nav"
-    app:startDestination="@id/fragmentHome">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/saveFragment2"
-        android:name="id.ac.pnm.edushare.saveFragment"
-        android:label="fragment_save"
+        android:id="@+id/saveFragment"
+        android:name="id.ac.pnm.edushare.menuNav.SaveFragment"
+        android:label="save_fragment"
         tools:layout="@layout/fragment_save" />
     <fragment
-        android:id="@+id/searchFragment2"
-        android:name="id.ac.pnm.edushare.searchFragment"
-        android:label="fragment_search"
+        android:id="@+id/searchFragment"
+        android:name="id.ac.pnm.edushare.menuNav.SearchFragment"
+        android:label="search_fragment"
         tools:layout="@layout/fragment_search" />
     <fragment
-        android:id="@+id/profileFragment3"
-        android:name="id.ac.pnm.edushare.profileFragment"
-        android:label="fragment_profile"
+        android:id="@+id/profileFragment"
+        android:name="id.ac.pnm.edushare.menuNav.ProfileFragment"
+        android:label="profile_framgent"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/fragmentHome"
-        android:name="id.ac.pnm.edushare.FragmentHome"
-        android:label="FragmentHome" />
+        android:id="@+id/homeFragment"
+        android:name="id.ac.pnm.edushare.menuNav.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
 </navigation>
