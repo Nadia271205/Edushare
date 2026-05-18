@@ -1,110 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/white"
-    tools:context=".RegisterActivity">
+    tools:context=".RegisterActivity"
+    android:background="#FFFFFF">
 
-    <EditText
-        android:id="@+id/editTextTextEmailAddressRegis"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextUsername"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextUsername"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextUsername" />
+        android:padding="32dp">
 
-    <EditText
-        android:id="@+id/editTextPhone"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="Nomor Hp"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddressRegis"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddressRegis"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddressRegis" />
+        <!-- Nama aplikasi -->
 
-    <EditText
-        android:id="@+id/editTextTextPasswordRegis"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@id/editTextPhone"
-        app:layout_constraintStart_toStartOf="@id/editTextPhone"
-        app:layout_constraintTop_toBottomOf="@id/editTextPhone" />
+        <TextView
+            android:id="@+id/tvAppNameRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:fontFamily="@font/lexend"
+            android:text="EDUSHARE"
+            android:textColor="#4364E6"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonRegister"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:backgroundTint="#005BBF"
-        android:text="Register"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPasswordRegis"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPasswordRegis"
-        app:layout_constraintTop_toBottomOf="@id/editTextTextPasswordRegis" />
+        <TextView
+            android:id="@+id/tvHeaderRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daftar Dulu!"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvAppNameRegister"/>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="Register"
-        android:textSize="50dp"
-        android:textStyle="bold"
-        android:textColor="#005BBF"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextUsername"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:id="@+id/llUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="27dp"
+            app:layout_constraintTop_toBottomOf="@id/tvHeaderRegister">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create your account"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextUsername"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            <EditText
+                android:id="@+id/etUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Masukkan Username"
+                android:textColorHint="#737373"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:background="@null"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="2dp"/>
 
-    <EditText
-        android:id="@+id/editTextTextUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:ems="12"
-        android:hint="Username"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewlogin1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sudah punya akun?"
-        android:textColor="#5555"
-        android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="@+id/buttonRegister"
-        tools:layout_editor_absoluteY="524dp" />
+        <LinearLayout
+            android:id="@+id/llEmailRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="27dp"
+            app:layout_constraintTop_toBottomOf="@id/llUsername">
 
-    <TextView
-        android:id="@+id/tvlogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:textStyle="bold"
-        android:textColor="#005BBF"
-        android:textSize="14dp"
-        app:layout_constraintStart_toEndOf="@+id/textViewlogin1"
-        tools:layout_editor_absoluteY="524dp" />
+            <EditText
+                android:id="@+id/etEmailRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Masukkan Email"
+                android:textColorHint="#737373"
+                android:textSize="16sp"
+                android:inputType="textEmailAddress"
+                android:background="@null"
+                android:paddingBottom="9dp"
+                android:layout_marginBottom="4dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llClass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="27dp"
+            app:layout_constraintTop_toBottomOf="@id/llEmailRegister">
+
+            <EditText
+                android:id="@+id/etClass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Kamu kelas berapa"
+                android:textColorHint="#737373"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:background="@null"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="2dp"/>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSchoolName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="27dp"
+            app:layout_constraintTop_toBottomOf="@id/llClass">
+
+            <EditText
+                android:id="@+id/etSchoolName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Asal Sekolah"
+                android:textColorHint="#737373"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:background="@null"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="2dp"/>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llPasswordRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="27dp"
+            app:layout_constraintTop_toBottomOf="@id/llSchoolName">
+
+            <EditText
+                android:id="@+id/etPasswordRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Masukkan Password"
+                android:textColorHint="#737373"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:background="@null"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="2dp"/>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
+        </LinearLayout>
+
+        <!-- Tombol Register -->
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Register"
+            android:textSize="16sp"
+            android:layout_marginTop="37dp"
+            android:backgroundTint="#4364E6"
+            app:layout_constraintTop_toBottomOf="@id/llPasswordRegister"/>
+
+        <TextView
+            android:id="@+id/tvBelumPunyaAkun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:text="Sudah Punya Akun?"
+            android:textColor="#737373"
+            app:layout_constraintTop_toBottomOf="@id/btnRegister"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tvGoToLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="27dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Login!"
+            android:textColor="#4364E6"
+            app:layout_constraintStart_toEndOf="@+id/tvBelumPunyaAkun"
+            app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>
