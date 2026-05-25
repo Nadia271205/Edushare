@@ -9,12 +9,20 @@
         android:id="@+id/saveFragment"
         android:name="id.ac.pnm.edushare.menuNav.SaveFragment"
         android:label="save_fragment"
-        tools:layout="@layout/fragment_save" />
+        tools:layout="@layout/fragment_save" >
+        <action
+            android:id="@+id/action_saveFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="id.ac.pnm.edushare.menuNav.SearchFragment"
         android:label="search_fragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="id.ac.pnm.edushare.menuNav.ProfileFragment"
@@ -24,6 +32,10 @@
         android:id="@+id/homeFragment"
         android:name="id.ac.pnm.edushare.menuNav.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_saveFragment"
+            app:destination="@id/saveFragment" />
+    </fragment>
 
 </navigation>
