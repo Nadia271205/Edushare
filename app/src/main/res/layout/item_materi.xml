@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/m3_split_button_chevron_avd"
+            android:src="@drawable/image_placeholder"
             android:background="#E0E0E0"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +28,7 @@
             android:id="@+id/tvMapel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Comp Sci"
+            tools:text="Matematika"
             android:textColor="#FF6200EE"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
@@ -40,7 +40,7 @@
             android:id="@+id/tvJudul"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Matematika"
+            tools:text="Kalkulus Integral Dasar"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
@@ -54,7 +54,7 @@
             android:id="@+id/tvDeskripsi"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Visual guide to traversing..."
+            tools:text="Ringkasan materi integral dasar..."
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
@@ -80,19 +80,18 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toEndOf="@id/ivProfile"
             app:layout_constraintTop_toTopOf="@id/ivProfile"
-            app:layout_constraintBottom_toBottomOf="@id/ivProfile"
-            app:layout_constraintEnd_toStartOf="@id/tvReview" />
+            app:layout_constraintBottom_toBottomOf="@id/ivProfile" />
 
-        <TextView
-            android:id="@+id/tvReview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="[Review]"
-            android:textColor="#FF6200EE"
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/bookmark_border"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivProfile"
-            app:layout_constraintBottom_toBottomOf="@id/ivProfile" />
+            app:layout_constraintBottom_toBottomOf="@id/ivProfile"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
