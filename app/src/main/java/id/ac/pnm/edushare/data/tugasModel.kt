@@ -14,5 +14,6 @@ data class tugasModel(
     var description: String? = "",
     var fileUrl: String? = "",
     var uploaderUid: String? = "",
+    var uploaderName: String? = "",
     var timestamp: Long = 0
 )
