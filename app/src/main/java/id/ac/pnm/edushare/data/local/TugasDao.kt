@@ -4,18 +4,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import id.ac.pnm.edushare.data.tugasModel
+import id.ac.pnm.edushare.data.TugasModel
 
 @Dao
 interface TugasDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(tugas: tugasModel)
+    suspend fun insert(tugas: TugasModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(tugas: List<tugasModel>)
+    suspend fun insertAll(tugas: List<TugasModel>)
 
     @Query("SELECT * FROM tugas ORDER BY timestamp DESC")
-    suspend fun getAll(): List<tugasModel>
+    suspend fun getAll(): List<TugasModel>
 
     @Query("DELETE FROM tugas")
     suspend fun clear()

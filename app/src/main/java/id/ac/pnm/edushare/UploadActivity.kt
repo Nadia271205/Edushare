@@ -17,7 +17,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import id.ac.pnm.edushare.data.tugasModel
+import id.ac.pnm.edushare.data.TugasModel
 import kotlinx.coroutines.launch
 
 class UploadActivity : AppCompatActivity() {
@@ -128,7 +128,7 @@ class UploadActivity : AppCompatActivity() {
 
         val tugasId = database.child("Tugas").push().key ?: return
 
-        val tugas = tugasModel(
+        val tugas = TugasModel(
             id = tugasId,
             title = title,
             description = description,
@@ -156,7 +156,7 @@ class UploadActivity : AppCompatActivity() {
             .addOnFailureListener {
 
                 Toast.makeText(this, "Gagal menyimpan data!!", Toast.LENGTH_SHORT).show()
-
+                return@addOnFailureListener
             }
     }
 }
