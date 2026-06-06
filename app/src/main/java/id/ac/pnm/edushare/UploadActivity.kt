@@ -170,7 +170,7 @@ class UploadActivity : AppCompatActivity() {
 
                                         lifecycleScope.launch {
                                             EduShareApp.db
-                                                .tugasDao()
+                                                .materiDao()
                                                 .insert(tugas)
                                         }
 

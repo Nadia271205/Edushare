@@ -5,7 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import id.ac.pnm.edushare.MateriAdapter
 import id.ac.pnm.edushare.R
+import id.ac.pnm.edushare.data.MateriModel
+import id.ac.pnm.edushare.data.local.AppDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +29,9 @@ class SaveFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var recyclerViewSaved: RecyclerView
+    private lateinit var materiAdapter: MateriAdapter
+    private var savedList = ArrayList<MateriModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,27 +45,44 @@ class SaveFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_save, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SaveFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SaveFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerViewSaved = view.findViewById(R.id.recyclerViewSaved)
+
+        materiAdapter = MateriAdapter(
+            materiList = savedList,
+            onItemClick = { materi ->
+
+            },
+            onSaveClick = { materi ->
+                deleteSavedMateri(materi)
             }
+        )
+
+        recyclerViewSaved.adapter = materiAdapter
+
+        loadSavedData()
+    }
+
+    private fun loadSavedData() {
+        val db = AppDatabase.getDatabase(requireContext())
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = db.materiDao().getAll()
+            withContext(Dispatchers.Main) {
+                materiAdapter.updateData(data)
+            }
+        }
+    }
+
+    private fun deleteSavedMateri(materi: MateriModel) {
+        val db = AppDatabase.getDatabase(requireContext())
+        CoroutineScope(Dispatchers.IO).launch {
+            db.materiDao().delete(materi)
+            loadSavedData()
+        }
     }
 }

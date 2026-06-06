@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,6 +16,8 @@ import com.google.firebase.database.getValue
 import id.ac.pnm.edushare.MateriAdapter
 import id.ac.pnm.edushare.R
 import id.ac.pnm.edushare.data.MateriModel
+import id.ac.pnm.edushare.data.local.AppDatabase
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,11 +40,17 @@ class SearchFragment : Fragment() {
     private var materiList = ArrayList<MateriModel>()
     private lateinit var databaseReference: DatabaseReference
 
-
-
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_search, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        databaseReference = Firebase.database.getReference("Tugas")
 
         searchView = view.findViewById(R.id.searchView)
         recyclerViewCatalog = view.findViewById(R.id.recyclerViewCatalog)
@@ -52,7 +61,10 @@ class SearchFragment : Fragment() {
 
             },
             { materi ->
-
+                val db = AppDatabase.getDatabase(requireContext())
+                viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    db.materiDao().insert(materi)
+                }
             }
         )
 
@@ -70,7 +82,6 @@ class SearchFragment : Fragment() {
                 return true
             }
         })
-        databaseReference = Firebase.database.getReference("Tugas")
     }
 
     private fun filterData(text: String) {
