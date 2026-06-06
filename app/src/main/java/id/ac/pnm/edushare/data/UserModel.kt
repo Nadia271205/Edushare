@@ -1,4 +1,4 @@
-data class userModel(
+data class UserModel(
 
     var uid: String? = "",
     var username: String? = null,

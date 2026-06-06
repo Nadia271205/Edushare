@@ -13,11 +13,13 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
+import id.ac.pnm.edushare.CommentActivity
 import id.ac.pnm.edushare.MateriAdapter
 import id.ac.pnm.edushare.R
 import id.ac.pnm.edushare.data.MateriModel
 import id.ac.pnm.edushare.data.local.AppDatabase
 import kotlinx.coroutines.launch
+import kotlin.jvm.java
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +60,12 @@ class SearchFragment : Fragment() {
         materiAdapter = MateriAdapter(
             materiList,
             { materi ->
-
+                val intent = android.content.Intent(requireContext(), CommentActivity::class.java)
+                intent.putExtra("EXTRA_ID", materi.id)
+                intent.putExtra("EXTRA_TITLE", materi.title)
+                intent.putExtra("EXTRA_DESC", materi.description)
+                intent.putExtra("EXTRA_AUTHOR", materi.uploaderName)
+                startActivity(intent)
             },
             { materi ->
                 val db = AppDatabase.getDatabase(requireContext())

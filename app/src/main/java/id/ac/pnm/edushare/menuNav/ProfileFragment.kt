@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -77,7 +76,7 @@ class ProfileFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
 
-                    val user = snapshot.getValue(userModel::class.java)
+                    val user = snapshot.getValue(UserModel::class.java)
 
                     tvUsername.text = user?.username
                     tvEmail.text = user?.email

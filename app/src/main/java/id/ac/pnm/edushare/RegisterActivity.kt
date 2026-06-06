@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import userModel
+import UserModel
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -70,7 +70,7 @@ class RegisterActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val userId = auth.currentUser?.uid
 
-                        val user = userModel(
+                        val user = UserModel(
                             uid = userId,
                             username = username,
                             email = email,
