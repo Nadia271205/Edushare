@@ -81,6 +81,9 @@ class HomeFragment : Fragment() {
                         materiList.add(materi)
                     }
                 }
+
+                materiList.sortByDescending { it.timestamp }
+
                 adapter.notifyDataSetChanged()
             }
 

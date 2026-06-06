@@ -2,6 +2,7 @@ package id.ac.pnm.edushare
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import kotlin.math.log
 
 class LoginActivity : AppCompatActivity() {
 
@@ -34,8 +36,10 @@ class LoginActivity : AppCompatActivity() {
         val tvRegister = findViewById<TextView>(R.id.tvGoToRegister)
 
         btnLogin.setOnClickListener {
+
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString()
+
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Email dan Password harus diisi!", Toast.LENGTH_SHORT).show()
@@ -43,8 +47,13 @@ class LoginActivity : AppCompatActivity() {
             }
 
             auth.signInWithEmailAndPassword(email, password)
+
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+
+                        etEmail.clearFocus()
+                        etPassword.clearFocus()
+
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {

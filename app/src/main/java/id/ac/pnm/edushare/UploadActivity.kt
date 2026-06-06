@@ -2,6 +2,7 @@ package id.ac.pnm.edushare
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -61,27 +62,28 @@ class UploadActivity : AppCompatActivity() {
         }
 
 
-
     }
 
-    private val filePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    private val filePicker =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
 
-        if (uri != null) {
-            selectedFileUri = uri
-            tvFileName.text = "File dipilih"
+            if (uri != null) {
+                selectedFileUri = uri
+                tvFileName.text = "File dipilih"
+            }
         }
-    }
 
     private fun getSelectedCategory(): String {
 
-        return when (chipGroup.checkedChipId) {
+        val chipId = chipGroup.checkedChipId
 
-            R.id.chipMath -> "Matematika"
-            R.id.chipPhysics -> "Fisika"
-            R.id.chipChemistry -> "Kimia"
-
-            else -> "Lainnya"
+        if (chipId == View.NO_ID) {
+            return "Lainnya"
         }
+
+        val chip =findViewById<com.google.android.material.chip.Chip>(chipId)
+
+        return chip.text.toString()
     }
 
     private fun uploadTask() {
@@ -94,11 +96,22 @@ class UploadActivity : AppCompatActivity() {
             return
         }
 
-        if (selectedFileUri == null) {
+        if (description.isEmpty()) {
+            etDescription.error = "Deskripsi wajib diisi!"
+            return
+        }
+
+        val fileUri = selectedFileUri
+
+        if (fileUri == null) {
             Toast.makeText(this, "Pilih file terlebih dahulu!", Toast.LENGTH_SHORT).show()
+            return
         }
 
         val uid = auth.currentUser?.uid ?: return
+
+        btnPublish.isEnabled = false
+        btnPublish.text = "Mengunggah..."
 
         val fileName = System.currentTimeMillis().toString()
 
@@ -106,57 +119,95 @@ class UploadActivity : AppCompatActivity() {
             .child("tugas")
             .child("$fileName.jpg")
 
-        storageRef.putFile(selectedFileUri!!)
-            .addOnSuccessListener {
-                storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-
-                    saveToDatabase(
-                        title,
-                        description,
-                        getSelectedCategory(),
-                        downloadUrl.toString(),
-                        uid
-                    )
-                }
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Upload gagal!", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun saveToDatabase(title: String, description: String, category: String, fileUrl: String, uid: String) {
-
-        val tugasId = database.child("Tugas").push().key ?: return
-
-        val tugas = TugasModel(
-            id = tugasId,
-            title = title,
-            description = description,
-            category = category,
-            fileUrl = fileUrl,
-            uploaderUid = uid,
-            timestamp = System.currentTimeMillis()
-        )
-
-        database.child("Tugas")
-            .child(tugasId)
-            .setValue(tugas)
+        storageRef.putFile(fileUri)
             .addOnSuccessListener {
 
-                lifecycleScope.launch {
-                    EduShareApp.db
-                        .tugasDao()
-                        .insert(tugas)
-                }
+                storageRef.downloadUrl
+                    .addOnSuccessListener { downloadUrl ->
 
-                Toast.makeText(this, "Upload berhasil!", Toast.LENGTH_SHORT).show()
+                        val tugasId =
+                            database.child("Tugas").push().key
 
-                finish()
+                        if (tugasId == null) {
+
+                            btnPublish.isEnabled = true
+                            btnPublish.text = "Upload"
+
+                            Toast.makeText(
+                                this,
+                                "Gagal membuat ID tugas",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            return@addOnSuccessListener
+                        }
+
+                        database.child("Users")
+                            .child(uid)
+                            .get()
+                            .addOnSuccessListener { snapshot ->
+
+                                val username =
+                                    snapshot.child("username").getValue(String::class.java)
+                                        ?: "Unknown"
+
+                                val tugas = TugasModel(
+                                    id = tugasId,
+                                    title = title,
+                                    category = getSelectedCategory(),
+                                    description = description,
+                                    fileUrl = downloadUrl.toString(),
+                                    uploaderUid = uid,
+                                    uploaderName = username,
+                                    timestamp = System.currentTimeMillis()
+                                )
+
+                                database.child("Tugas")
+                                    .child(tugasId)
+                                    .setValue(tugas)
+                                    .addOnSuccessListener {
+
+
+                                        lifecycleScope.launch {
+                                            EduShareApp.db
+                                                .tugasDao()
+                                                .insert(tugas)
+                                        }
+
+                                        Toast.makeText(this,"Upload berhasil!", Toast.LENGTH_SHORT).show()
+
+                                        finish()
+                                    }
+                                    .addOnFailureListener { e ->
+
+                                        btnPublish.isEnabled = true
+                                        btnPublish.text = "Upload"
+
+                                        Toast.makeText(this, "Gagal menyimpan data: ${e.message}", Toast.LENGTH_LONG).show()
+                                    }
+                            }.addOnFailureListener {
+                                Toast.makeText(
+                                    this,
+                                    "Gagal mengambil data user",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                    }
+                    .addOnFailureListener { e ->
+
+                        btnPublish.isEnabled = true
+                        btnPublish.text = "Upload"
+
+                        Toast.makeText(this, "Gagal mendapatkan URL file: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
             }
-            .addOnFailureListener {
+            .addOnFailureListener { e ->
 
-                Toast.makeText(this, "Gagal menyimpan data!!", Toast.LENGTH_SHORT).show()
-                return@addOnFailureListener
+                btnPublish.isEnabled = true
+                btnPublish.text = "Upload"
+
+                Toast.makeText(this, "Upload file gagal: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 }

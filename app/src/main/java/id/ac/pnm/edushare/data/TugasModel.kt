@@ -9,11 +9,11 @@ data class TugasModel(
 
     @PrimaryKey
     var id: String = "",
-    var title: String? = "",
-    var category: String? = "",
-    var description: String? = "",
-    var fileUrl: String? = "",
-    var uploaderUid: String? = "",
-    var uploaderName: String? = "",
+    var title: String = "",
+    var category: String = "",
+    var description: String = "",
+    var fileUrl: String = "",
+    var uploaderUid: String = "",
+    var uploaderName: String = "",
     var timestamp: Long = 0
 )
