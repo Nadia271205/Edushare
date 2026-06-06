@@ -18,14 +18,14 @@ import com.google.firebase.database.ValueEventListener
 import id.ac.pnm.edushare.MateriAdapter
 import id.ac.pnm.edushare.R
 import id.ac.pnm.edushare.UploadActivity
-import id.ac.pnm.edushare.data.TugasModel
+import id.ac.pnm.edushare.data.MateriModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var rvMateri: RecyclerView
     private lateinit var adapter: MateriAdapter
 
-    private val materiList = mutableListOf< TugasModel>()
+    private val materiList = mutableListOf< MateriModel>()
 
     private lateinit var database: DatabaseReference
 
@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
                 materiList.clear()
 
                 for (data in snapshot.children) {
-                    val materi = data.getValue(TugasModel::class.java)
+                    val materi = data.getValue(MateriModel::class.java)
 
                     if (materi != null) {
                         materiList.add(materi)

@@ -2,10 +2,10 @@ package id.ac.pnm.edushare.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import id.ac.pnm.edushare.data.TugasModel
+import id.ac.pnm.edushare.data.MateriModel
 
 
-@Database(entities = [TugasModel::class], version = 1)
+@Database(entities = [MateriModel::class], version = 1)
 
 abstract class AppDatabase: RoomDatabase() {
     abstract fun tugasDao(): TugasDao

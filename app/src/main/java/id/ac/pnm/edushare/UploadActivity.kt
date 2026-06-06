@@ -18,7 +18,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import id.ac.pnm.edushare.data.TugasModel
+import id.ac.pnm.edushare.data.MateriModel
 import kotlinx.coroutines.launch
 
 class UploadActivity : AppCompatActivity() {
@@ -151,7 +151,7 @@ class UploadActivity : AppCompatActivity() {
                                     snapshot.child("username").getValue(String::class.java)
                                         ?: "Unknown"
 
-                                val tugas = TugasModel(
+                                val tugas = MateriModel(
                                     id = tugasId,
                                     title = title,
                                     category = getSelectedCategory(),

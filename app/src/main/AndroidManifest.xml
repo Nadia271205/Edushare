@@ -16,10 +16,7 @@
         android:theme="@style/Theme.Edushare"
         android:windowSoftInputMode="stateUnchanged|adjustPan">
         <activity
-            android:name=".komen"
-            android:exported="false" />
-        <activity
-            android:name=".Komen"
+            android:name=".CommentActivity"
             android:exported="false" />
         <activity
             android:name=".UploadActivity"

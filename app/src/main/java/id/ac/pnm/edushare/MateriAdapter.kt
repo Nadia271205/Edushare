@@ -8,12 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import id.ac.pnm.edushare.data.TugasModel
+import id.ac.pnm.edushare.data.MateriModel
 
 class MateriAdapter(
-    private val materiList: MutableList<TugasModel>,
-    private val onItemClick: (TugasModel) -> Unit,
-    private val onSaveClick: (TugasModel) -> Unit
+    private val materiList: MutableList<MateriModel>,
+    private val onItemClick: (MateriModel) -> Unit,
+    private val onSaveClick: (MateriModel) -> Unit
 ): RecyclerView.Adapter<MateriAdapter.MateriViewHolder>() {
 
     inner class MateriViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -67,7 +67,7 @@ class MateriAdapter(
         return materiList.size
     }
 
-    fun updateData(newList: List<TugasModel>) {
+    fun updateData(newList: List<MateriModel>) {
 
         materiList.clear()
         materiList.addAll(newList)

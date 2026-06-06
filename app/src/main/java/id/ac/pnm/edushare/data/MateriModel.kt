@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "tugas")
-data class TugasModel(
+data class MateriModel(
 
     @PrimaryKey
     var id: String = "",
