@@ -55,6 +55,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("EXTRA_TITLE", materi.title)
                 intent.putExtra("EXTRA_DESC", materi.description)
                 intent.putExtra("EXTRA_AUTHOR", materi.uploaderName)
+                intent.putExtra("EXTRA_CATEGORY",materi.category)
                 startActivity(intent)
             },
             onSaveClick = { materi ->
@@ -94,12 +95,12 @@ class HomeFragment : Fragment() {
                     val materi = data.getValue(MateriModel::class.java)
 
                     if (materi != null) {
+                        materi.id = data.key ?: ""
                         materiList.add(materi)
                     }
                 }
 
                 materiList.sortByDescending { it.timestamp }
-
                 adapter.notifyDataSetChanged()
             }
 

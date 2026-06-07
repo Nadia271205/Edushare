@@ -1,6 +1,7 @@
 package id.ac.pnm.edushare
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +29,7 @@ class CommentActivity : AppCompatActivity() {
     private lateinit var tvPostMeta: TextView
     private lateinit var tvPostContent: TextView
     private lateinit var tvCommentCount: TextView
+    private lateinit var tvMapel: TextView
     private lateinit var ivBack: ImageView
     private lateinit var recyclerViewComments: RecyclerView
     private lateinit var etAddComment: EditText
@@ -56,6 +59,7 @@ class CommentActivity : AppCompatActivity() {
         tvPostMeta = findViewById(R.id.tvPostMeta)
         tvPostContent = findViewById(R.id.tvPostContent)
         tvCommentCount = findViewById(R.id.tvCommentCount)
+        tvMapel = findViewById(R.id.tvMapel)
         ivBack = findViewById(R.id.ivBack)
         recyclerViewComments = findViewById(R.id.recyclerViewComments)
         etAddComment = findViewById(R.id.etAddComment)
@@ -70,12 +74,15 @@ class CommentActivity : AppCompatActivity() {
         val content = intent.getStringExtra("EXTRA_DESC") ?: ""
         val author = intent.getStringExtra("EXTRA_AUTHOR") ?: "Unknown"
 
+        tvMapel.text = intent.getStringExtra("EXTRA_CATEGORY") ?: ""
         tvPostTitle.text = title
         tvPostContent.text = content
         tvPostMeta.text = "Diposting oleh $author"
 
-        commentAdapter = CommentAdapter(commentList)
+        commentAdapter = CommentAdapter()
         recyclerViewComments.adapter = commentAdapter
+        recyclerViewComments.layoutManager = LinearLayoutManager(this)
+        commentAdapter.updateData(commentList)
 
         ivBack.setOnClickListener { finish() }
 
@@ -136,8 +143,16 @@ class CommentActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 commentList.clear()
                 for (data in snapshot.children) {
-                    val comment = data.getValue<CommentModel>()
-                    if (comment != null) {
+                    val map = data.getValue<Map<String, Any>>()
+                    if (map != null) {
+                        val comment = CommentModel(
+                            commentId = map["commentId"] as? String ?: "",
+                            materiId = map["materiId"] as? String ?: "",
+                            uploaderUid = map["uploaderUid"] as? String ?: "",
+                            uploaderName = map["uploaderName"] as? String ?: "",
+                            commentText = map["commentText"] as? String ?: "",
+                            timestamp = (map["timestamp"] as? Number)?.toLong() ?: 0L
+                        )
                         commentList.add(comment)
                     }
                 }

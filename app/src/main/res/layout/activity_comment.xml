@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -36,10 +38,11 @@
     </LinearLayout>
 
     <!-- ScrollView untuk konten -->
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,22 +89,13 @@
                 android:layout_marginTop="16dp">
 
                 <TextView
+                    android:id="@+id/tvMapel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mathematics"
                     android:padding="4dp"
                     android:textSize="12sp"
                     android:textColor="#3B82F6"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Calculus"
-                    android:padding="4dp"
-                    android:layout_marginStart="8dp"
-                    android:textSize="12sp"
-                    android:textColor="#3B82F6" />
-
             </LinearLayout>
 
             <!-- Divider -->
@@ -148,13 +142,14 @@
                 android:id="@+id/recyclerViewComments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Input Komentar di Bawah dengan Icon Send -->
     <LinearLayout

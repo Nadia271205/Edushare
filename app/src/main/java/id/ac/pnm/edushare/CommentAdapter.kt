@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import id.ac.pnm.edushare.data.CommentModel
 
-class CommentAdapter(
-    private val commentList: MutableList<CommentModel>
-) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
+class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
+
+    private var commentList = mutableListOf<CommentModel>()
 
     inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvCommentAuthor: TextView = itemView.findViewById(R.id.tvCommentAuthor)
@@ -26,10 +26,8 @@ class CommentAdapter(
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val comment = commentList[position]
-
         holder.tvCommentAuthor.text = comment.uploaderName
         holder.tvCommentText.text = comment.commentText
-
         val timeAgo = DateUtils.getRelativeTimeSpanString(
             comment.timestamp,
             System.currentTimeMillis(),
@@ -38,13 +36,10 @@ class CommentAdapter(
         holder.tvCommentTime.text = timeAgo.toString()
     }
 
-    override fun getItemCount(): Int {
-        return commentList.size
-    }
+    override fun getItemCount(): Int = commentList.size
 
     fun updateData(newList: List<CommentModel>) {
-        commentList.clear()
-        commentList.addAll(newList)
+        commentList = newList.toMutableList()
         notifyDataSetChanged()
     }
 }
