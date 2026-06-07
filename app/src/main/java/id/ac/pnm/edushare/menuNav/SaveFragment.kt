@@ -6,40 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import id.ac.pnm.edushare.CommentActivity
+import id.ac.pnm.edushare.EduShareApp
 import id.ac.pnm.edushare.MateriAdapter
 import id.ac.pnm.edushare.R
 import id.ac.pnm.edushare.data.MateriModel
-import id.ac.pnm.edushare.data.local.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SaveFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SaveFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
     private lateinit var recyclerViewSaved: RecyclerView
     private lateinit var materiAdapter: MateriAdapter
     private var savedList = ArrayList<MateriModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,13 +33,19 @@ class SaveFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerViewSaved = view.findViewById(R.id.recyclerViewSaved)
+        recyclerViewSaved.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
 
         materiAdapter = MateriAdapter(
-            materiList = savedList,
-            onItemClick = { materi ->
-
+            savedList,
+            { materi ->
+                val intent = android.content.Intent(requireContext(), CommentActivity::class.java)
+                intent.putExtra("EXTRA_ID", materi.id)
+                intent.putExtra("EXTRA_TITLE", materi.title)
+                intent.putExtra("EXTRA_DESC", materi.description)
+                intent.putExtra("EXTRA_AUTHOR", materi.uploaderName)
+                startActivity(intent)
             },
-            onSaveClick = { materi ->
+            { materi ->
                 deleteSavedMateri(materi)
             }
         )
@@ -69,7 +56,7 @@ class SaveFragment : Fragment() {
     }
 
     private fun loadSavedData() {
-        val db = AppDatabase.getDatabase(requireContext())
+        val db = EduShareApp.db
         CoroutineScope(Dispatchers.IO).launch {
             val data = db.materiDao().getAll()
             withContext(Dispatchers.Main) {
@@ -79,10 +66,13 @@ class SaveFragment : Fragment() {
     }
 
     private fun deleteSavedMateri(materi: MateriModel) {
-        val db = AppDatabase.getDatabase(requireContext())
+        val db = EduShareApp.db
         CoroutineScope(Dispatchers.IO).launch {
             db.materiDao().delete(materi)
-            loadSavedData()
+            withContext(Dispatchers.Main) {
+                android.widget.Toast.makeText(requireContext(), "Materi dihapus dari simpanan", android.widget.Toast.LENGTH_SHORT).show()
+                loadSavedData()
+            }
         }
     }
 }

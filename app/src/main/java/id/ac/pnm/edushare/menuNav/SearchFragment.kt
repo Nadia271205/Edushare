@@ -10,10 +10,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 import id.ac.pnm.edushare.CommentActivity
+import id.ac.pnm.edushare.EduShareApp
 import id.ac.pnm.edushare.MateriAdapter
 import id.ac.pnm.edushare.R
 import id.ac.pnm.edushare.data.MateriModel
@@ -21,25 +23,15 @@ import id.ac.pnm.edushare.data.local.AppDatabase
 import kotlinx.coroutines.launch
 import kotlin.jvm.java
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private lateinit var searchView: android.widget.SearchView
     private lateinit var recyclerViewCatalog: androidx.recyclerview.widget.RecyclerView
     private lateinit var materiAdapter: MateriAdapter
-    private var materiList = ArrayList<MateriModel>()
+
+    private var originalList = ArrayList<MateriModel>()
+    private var displayList = ArrayList<MateriModel>()
+
     private lateinit var databaseReference: DatabaseReference
 
     override fun onCreateView(
@@ -52,13 +44,13 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        databaseReference = Firebase.database.getReference("Tugas")
+        databaseReference = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Tugas")
 
         searchView = view.findViewById(R.id.searchView)
         recyclerViewCatalog = view.findViewById(R.id.recyclerViewCatalog)
 
         materiAdapter = MateriAdapter(
-            materiList,
+            displayList,
             { materi ->
                 val intent = android.content.Intent(requireContext(), CommentActivity::class.java)
                 intent.putExtra("EXTRA_ID", materi.id)
@@ -68,9 +60,15 @@ class SearchFragment : Fragment() {
                 startActivity(intent)
             },
             { materi ->
-                val db = AppDatabase.getDatabase(requireContext())
+                val db = EduShareApp.db
                 viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                    db.materiDao().insert(materi)
+                    try {
+                        db.materiDao().insert(materi)
+                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                            android.widget.Toast.makeText(requireContext(), "Materi berhasil disimpan!", android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Exception) {
+                    }
                 }
             }
         )
@@ -93,7 +91,7 @@ class SearchFragment : Fragment() {
 
     private fun filterData(text: String) {
         val filteredList = ArrayList<MateriModel>()
-        for (item in materiList) {
+        for (item in originalList) {
             if (item.title.lowercase(java.util.Locale.getDefault()).contains(text.lowercase(java.util.Locale.getDefault())) ||
                 item.category.lowercase(java.util.Locale.getDefault()).contains(text.lowercase(java.util.Locale.getDefault()))
             ) {
@@ -106,14 +104,16 @@ class SearchFragment : Fragment() {
     private fun loadData() {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                materiList.clear()
+                originalList.clear()
+                displayList.clear()
                 for (dataSnapshot in snapshot.children) {
                     val materi = dataSnapshot.getValue<MateriModel>()
                     if (materi != null) {
-                        materiList.add(materi)
+                        originalList.add(materi)
+                        displayList.add(materi)
                     }
                 }
-                materiAdapter.updateData(materiList)
+                materiAdapter.updateData(displayList)
             }
 
             override fun onCancelled(error: DatabaseError) {

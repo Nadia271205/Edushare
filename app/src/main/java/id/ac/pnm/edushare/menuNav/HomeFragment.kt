@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -15,10 +16,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import id.ac.pnm.edushare.CommentActivity
+import id.ac.pnm.edushare.EduShareApp
 import id.ac.pnm.edushare.MateriAdapter
 import id.ac.pnm.edushare.R
 import id.ac.pnm.edushare.UploadActivity
 import id.ac.pnm.edushare.data.MateriModel
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -45,13 +49,26 @@ class HomeFragment : Fragment() {
 
         adapter = MateriAdapter(
             materiList,
-
             onItemClick = { materi ->
-
+                val intent = android.content.Intent(requireContext(), CommentActivity::class.java)
+                intent.putExtra("EXTRA_ID", materi.id)
+                intent.putExtra("EXTRA_TITLE", materi.title)
+                intent.putExtra("EXTRA_DESC", materi.description)
+                intent.putExtra("EXTRA_AUTHOR", materi.uploaderName)
+                startActivity(intent)
             },
             onSaveClick = { materi ->
-
-            },
+                val db = EduShareApp.db
+                viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    try {
+                        db.materiDao().insert(materi)
+                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                            Toast.makeText(requireContext(), "Materi berhasil disimpan!", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Exception) {
+                    }
+                }
+            }
         )
 
         rvMateri.layoutManager = LinearLayoutManager(requireContext())
