@@ -68,9 +68,9 @@ class ProfileFragment : Fragment() {
         val uid = currentUser.uid
 
 
-        database = FirebaseDatabase.getInstance()
-            .getReference("Users")
-            .child(uid)
+        database = FirebaseDatabase
+            .getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app")
+            .getReference("Users").child(uid)
 
         database.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

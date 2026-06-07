@@ -58,8 +58,7 @@ class HomeFragment : Fragment() {
 
         rvMateri.adapter = adapter
 
-        database = FirebaseDatabase.getInstance().getReference("Tugas")
-
+        database = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Tugas")
         loadMateri()
 
         fabTambah.setOnClickListener {

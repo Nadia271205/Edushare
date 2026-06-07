@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
@@ -61,8 +62,8 @@ class CommentActivity : AppCompatActivity() {
         ivSendComment = findViewById(R.id.ivSendComment)
 
         auth = FirebaseAuth.getInstance()
-        databaseReference = Firebase.database.getReference("Comments")
-        userDatabase = Firebase.database.getReference("Users")
+        databaseReference = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Comments")
+        userDatabase = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Users")
 
         materiId = intent.getStringExtra("EXTRA_ID") ?: ""
         val title = intent.getStringExtra("EXTRA_TITLE") ?: "Materi"
