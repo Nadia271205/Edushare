@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import id.ac.pnm.edushare.data.MateriModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UploadActivity : AppCompatActivity() {
@@ -120,94 +121,109 @@ class UploadActivity : AppCompatActivity() {
             .child("$fileName.jpg")
 
         storageRef.putFile(fileUri)
-            .addOnSuccessListener {
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
-                storageRef.downloadUrl
-                    .addOnSuccessListener { downloadUrl ->
+                    storageRef.downloadUrl
+                        .addOnCompleteListener { urlTask ->
+                            if (urlTask.isSuccessful) {
+                                val downloadUrl = urlTask.result.toString()
 
-                        val tugasId =
-                            database.child("Tugas").push().key
+                                val tugasId =
+                                    database.child("Tugas").push().key
 
-                        if (tugasId == null) {
+                                if (tugasId == null) {
 
-                            btnPublish.isEnabled = true
-                            btnPublish.text = "Upload"
+                                    btnPublish.isEnabled = true
+                                    btnPublish.text = "Upload"
 
-                            Toast.makeText(
-                                this,
-                                "Gagal membuat ID tugas",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                                    Toast.makeText(
+                                        this,
+                                        "Gagal membuat ID tugas",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
 
-                            return@addOnSuccessListener
-                        }
+                                    return@addOnCompleteListener
+                                }
 
-                        database.child("Users")
-                            .child(uid)
-                            .get()
-                            .addOnSuccessListener { snapshot ->
+                                database.child("Users")
+                                    .child(uid)
+                                    .get()
+                                    .addOnCompleteListener { userTask ->
 
-                                val username =
-                                    snapshot.child("username").getValue(String::class.java)
-                                        ?: "Unknown"
+                                        val username =
+                                            if (userTask.isSuccessful && userTask.result.exists()) {
+                                                userTask.result.child("username")
+                                                    .getValue(String::class.java)
+                                                    ?: "Unknown"
+                                            } else {
+                                                "Unknown"
+                                            }
 
-                                val tugas = MateriModel(
-                                    id = tugasId,
-                                    title = title,
-                                    category = getSelectedCategory(),
-                                    description = description,
-                                    fileUrl = downloadUrl.toString(),
-                                    uploaderUid = uid,
-                                    uploaderName = username,
-                                    timestamp = System.currentTimeMillis()
-                                )
+                                        val tugas = MateriModel(
+                                            id = tugasId,
+                                            title = title,
+                                            category = getSelectedCategory(),
+                                            description = description,
+                                            fileUrl = downloadUrl,
+                                            uploaderUid = uid,
+                                            uploaderName = username,
+                                            timestamp = System.currentTimeMillis()
+                                        )
 
-                                database.child("Tugas")
-                                    .child(tugasId)
-                                    .setValue(tugas)
-                                    .addOnSuccessListener {
+                                        database.child("Tugas")
+                                            .child(tugasId)
+                                            .setValue(tugas)
+                                            .addOnCompleteListener { saveTask ->
+                                                if (saveTask.isSuccessful) {
 
 
-                                        lifecycleScope.launch {
-                                            EduShareApp.db
-                                                .materiDao()
-                                                .insert(tugas)
-                                        }
+                                                    lifecycleScope.launch(Dispatchers.IO) {
+                                                        try {
+                                                            EduShareApp.db
+                                                                .materiDao()
+                                                                .insert(tugas)
+                                                        } catch (e: Exception) {
+                                                        }
+                                                    }
 
-                                        Toast.makeText(this,"Upload berhasil!", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(
+                                                        this,
+                                                        "Upload berhasil!",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
 
-                                        finish()
+                                                    finish()
+                                                } else {
+                                                    btnPublish.isEnabled = true
+                                                    btnPublish.text = "Upload"
+
+                                                    Toast.makeText(
+                                                        this,
+                                                        "Gagal menyimpan data ke database",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                }
+                                            }
                                     }
-                                    .addOnFailureListener { e ->
+                            } else {
+                                btnPublish.isEnabled = true
+                                btnPublish.text = "Upload"
 
-                                        btnPublish.isEnabled = true
-                                        btnPublish.text = "Upload"
-
-                                        Toast.makeText(this, "Gagal menyimpan data: ${e.message}", Toast.LENGTH_LONG).show()
-                                    }
-                            }.addOnFailureListener {
                                 Toast.makeText(
                                     this,
-                                    "Gagal mengambil data user",
-                                    Toast.LENGTH_SHORT
+                                    "Gagal mendapatkan URL file",
+                                    Toast.LENGTH_LONG
                                 ).show()
                             }
 
-                    }
-                    .addOnFailureListener { e ->
+                        }
+                } else {
+                    btnPublish.isEnabled = true
+                    btnPublish.text = "Upload"
 
-                        btnPublish.isEnabled = true
-                        btnPublish.text = "Upload"
-
-                        Toast.makeText(this, "Gagal mendapatkan URL file: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-            }
-            .addOnFailureListener { e ->
-
-                btnPublish.isEnabled = true
-                btnPublish.text = "Upload"
-
-                Toast.makeText(this, "Upload file gagal: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Upload file gagal", Toast.LENGTH_LONG).show()
+                }
             }
     }
 }
