@@ -34,7 +34,6 @@
             android:textColor="#1E293B"
             android:layout_marginStart="12dp" />
 
-
     </LinearLayout>
 
     <!-- ScrollView untuk konten -->
@@ -49,7 +48,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
 
             <!-- Judul Post -->
             <TextView
@@ -71,16 +69,15 @@
                 android:textColor="#64748B"
                 android:layout_marginTop="8dp" />
 
+            <!-- Gambar Thumbnail Materi -->
             <ImageView
                 android:id="@+id/ivThumbnail"
-                android:layout_width="368dp"
-                android:layout_height="164dp"
-                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="12dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image_placeholder"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:background="#E2E8F0"
+                android:src="@drawable/image_placeholder" />
 
             <!-- Konten Post -->
             <TextView

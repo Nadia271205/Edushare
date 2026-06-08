@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
     private lateinit var rvMateri: RecyclerView
     private lateinit var adapter: MateriAdapter
 
-    private val materiList = mutableListOf< MateriModel>()
+    private val materiList = mutableListOf<MateriModel>()
 
     private lateinit var database: DatabaseReference
 
@@ -37,7 +37,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -50,12 +49,13 @@ class HomeFragment : Fragment() {
         adapter = MateriAdapter(
             materiList,
             onItemClick = { materi ->
-                val intent = android.content.Intent(requireContext(), CommentActivity::class.java)
+                val intent = Intent(requireContext(), CommentActivity::class.java)
                 intent.putExtra("EXTRA_ID", materi.id)
                 intent.putExtra("EXTRA_TITLE", materi.title)
                 intent.putExtra("EXTRA_DESC", materi.description)
                 intent.putExtra("EXTRA_AUTHOR", materi.uploaderName)
-                intent.putExtra("EXTRA_CATEGORY",materi.category)
+                intent.putExtra("EXTRA_CATEGORY", materi.category)
+                intent.putExtra("EXTRA_IMAGE_URL", materi.fileUrl)
                 startActivity(intent)
             },
             onSaveClick = { materi ->
@@ -73,21 +73,20 @@ class HomeFragment : Fragment() {
         )
 
         rvMateri.layoutManager = LinearLayoutManager(requireContext())
-
         rvMateri.adapter = adapter
 
         database = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Tugas")
         loadMateri()
 
         fabTambah.setOnClickListener {
-            val intent = Intent(requireActivity(), UploadActivity::class.java )
+            val intent = Intent(requireActivity(), UploadActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun loadMateri() {
 
-        database.addValueEventListener(object: ValueEventListener {
+        database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 materiList.clear()
 
@@ -110,5 +109,4 @@ class HomeFragment : Fragment() {
 
         })
     }
-
 }

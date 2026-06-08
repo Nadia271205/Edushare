@@ -1,7 +1,6 @@
 package id.ac.pnm.edushare
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,15 +11,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.Firebase
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.database
-import com.google.firebase.database.getValue
+import com.google.firebase.database.*
 import id.ac.pnm.edushare.data.CommentModel
 
 class CommentActivity : AppCompatActivity() {
@@ -31,6 +24,7 @@ class CommentActivity : AppCompatActivity() {
     private lateinit var tvCommentCount: TextView
     private lateinit var tvMapel: TextView
     private lateinit var ivBack: ImageView
+    private lateinit var ivThumbnail: ImageView
     private lateinit var recyclerViewComments: RecyclerView
     private lateinit var etAddComment: EditText
     private lateinit var ivSendComment: ImageView
@@ -61,6 +55,7 @@ class CommentActivity : AppCompatActivity() {
         tvCommentCount = findViewById(R.id.tvCommentCount)
         tvMapel = findViewById(R.id.tvMapel)
         ivBack = findViewById(R.id.ivBack)
+        ivThumbnail = findViewById(R.id.ivThumbnail)
         recyclerViewComments = findViewById(R.id.recyclerViewComments)
         etAddComment = findViewById(R.id.etAddComment)
         ivSendComment = findViewById(R.id.ivSendComment)
@@ -69,15 +64,28 @@ class CommentActivity : AppCompatActivity() {
         databaseReference = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Comments")
         userDatabase = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Users")
 
+        // Ambil data dari Intent
         materiId = intent.getStringExtra("EXTRA_ID") ?: ""
         val title = intent.getStringExtra("EXTRA_TITLE") ?: "Materi"
         val content = intent.getStringExtra("EXTRA_DESC") ?: ""
         val author = intent.getStringExtra("EXTRA_AUTHOR") ?: "Unknown"
+        val category = intent.getStringExtra("EXTRA_CATEGORY") ?: ""
+        val imageUrl = intent.getStringExtra("EXTRA_IMAGE_URL") ?: ""
 
-        tvMapel.text = intent.getStringExtra("EXTRA_CATEGORY") ?: ""
+        tvMapel.text = category
         tvPostTitle.text = title
         tvPostContent.text = content
         tvPostMeta.text = "Diposting oleh $author"
+
+        if (imageUrl.isNotEmpty()) {
+            Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.image_placeholder)
+                .into(ivThumbnail)
+        } else {
+            ivThumbnail.visibility = android.view.View.GONE
+        }
 
         commentAdapter = CommentAdapter()
         recyclerViewComments.adapter = commentAdapter
@@ -130,6 +138,7 @@ class CommentActivity : AppCompatActivity() {
         databaseReference.child(materiId).child(commentId).setValue(commentModel)
             .addOnSuccessListener {
                 etAddComment.setText("")
+                Toast.makeText(this, "Komentar terkirim", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Gagal mengirim komentar", Toast.LENGTH_SHORT).show()
@@ -161,7 +170,7 @@ class CommentActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@CommentActivity, "Gagal memuat komentar", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CommentActivity, "Gagal memuat komentar: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
