@@ -6,5 +6,6 @@ data class CommentModel(
     var uploaderUid: String = "",
     var uploaderName: String = "",
     var commentText: String = "",
+    var fileUrl: String = "",
     var timestamp: Long = 0L
 )

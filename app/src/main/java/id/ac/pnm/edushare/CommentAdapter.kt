@@ -4,8 +4,10 @@ import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import id.ac.pnm.edushare.data.CommentModel
 
 class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
@@ -16,6 +18,7 @@ class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() 
         val tvCommentAuthor: TextView = itemView.findViewById(R.id.tvCommentAuthor)
         val tvCommentTime: TextView = itemView.findViewById(R.id.tvCommentTime)
         val tvCommentText: TextView = itemView.findViewById(R.id.tvCommentText)
+        val ivThumbnail = itemView.findViewById<ImageView>(R.id.ivThumbnail)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -34,6 +37,11 @@ class CommentAdapter : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() 
             DateUtils.MINUTE_IN_MILLIS
         )
         holder.tvCommentTime.text = timeAgo.toString()
+        Glide.with(holder.itemView.context)
+            .load(comment.fileUrl)  // ← Gunakan fileUrl seperti di MateriAdapter
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder)
+            .into(holder.ivThumbnail)
     }
 
     override fun getItemCount(): Int = commentList.size

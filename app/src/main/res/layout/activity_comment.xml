@@ -71,6 +71,17 @@
                 android:textColor="#64748B"
                 android:layout_marginTop="8dp" />
 
+            <ImageView
+                android:id="@+id/ivThumbnail"
+                android:layout_width="368dp"
+                android:layout_height="164dp"
+                android:background="#E0E0E0"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image_placeholder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <!-- Konten Post -->
             <TextView
                 android:id="@+id/tvPostContent"
