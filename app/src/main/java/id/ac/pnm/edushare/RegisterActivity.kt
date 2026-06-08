@@ -37,7 +37,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance().reference.child("Users")
+        database = FirebaseDatabase.getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app").reference.child("Users")
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etEmail = findViewById<EditText>(R.id.etEmailRegister)
@@ -71,7 +71,7 @@ class RegisterActivity : AppCompatActivity() {
                         val userId = auth.currentUser?.uid
 
                         val user = UserModel(
-                            uid = userId,
+                            uid = userId ?: "",
                             username = username,
                             email = email,
                             kelas = kelas,
