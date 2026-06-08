@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -45,6 +47,26 @@ class HomeFragment : Fragment() {
 
         rvMateri = view.findViewById(R.id.rvMateri)
         val fabTambah = view.findViewById<FloatingActionButton>(R.id.fab_tambah)
+
+        val tvGreeting = view.findViewById<TextView>(R.id.tvGreeting)
+
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (uid != null) {
+            FirebaseDatabase.getInstance()
+                .getReference("Users")
+                .child(uid)
+                .get()
+                .addOnSuccessListener { snapshot ->
+
+                    val nama = snapshot.child("username").getValue(String::class.java)
+
+                    tvGreeting.text = "Halo, ${nama ?: "pengguna"}"
+                }
+                .addOnFailureListener {
+                    tvGreeting.text = "Halo, "
+                }
+        }
 
         adapter = MateriAdapter(
             materiList,

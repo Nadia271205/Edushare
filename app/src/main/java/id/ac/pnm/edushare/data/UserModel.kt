@@ -1,6 +1,6 @@
 data class UserModel(
 
-    var uid: String? = "",
+    var uid: String? = null,
     var username: String? = null,
     var email: String? = null,
     var kelas: String? = null,

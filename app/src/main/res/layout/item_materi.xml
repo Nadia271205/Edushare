@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:background="#FFFFFF"
+        android:foreground="?attr/selectableItemBackground">
 
         <ImageView
             android:id="@+id/ivThumbnail"
             android:layout_width="0dp"
-            android:layout_height="160dp"
+            android:layout_height="180dp"
+            android:clipToOutline="true"
             android:scaleType="centerCrop"
             android:src="@drawable/image_placeholder"
             android:background="#E0E0E0"
@@ -29,10 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Matematika"
-            android:textColor="#FF6200EE"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
+            android:textColor="#F1F1F1"
+            android:background="@drawable/bg_chip"
             app:layout_constraintTop_toBottomOf="@id/ivThumbnail"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -41,7 +50,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             tools:text="Kalkulus Integral Dasar"
-            android:textSize="18sp"
+            android:textSize="22sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
@@ -58,6 +69,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="#666666"
             app:layout_constraintTop_toBottomOf="@id/tvJudul"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -95,4 +109,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
