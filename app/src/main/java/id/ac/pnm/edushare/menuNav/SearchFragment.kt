@@ -1,11 +1,13 @@
 package id.ac.pnm.edushare.menuNav
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,7 +32,6 @@ class SearchFragment : Fragment() {
     private lateinit var materiAdapter: MateriAdapter
 
     private var originalList = ArrayList<MateriModel>()
-    private var displayList = ArrayList<MateriModel>()
 
     private lateinit var databaseReference: DatabaseReference
 
@@ -50,7 +51,7 @@ class SearchFragment : Fragment() {
         recyclerViewCatalog = view.findViewById(R.id.recyclerViewCatalog)
 
         materiAdapter = MateriAdapter(
-            displayList,
+            mutableListOf(),
             { materi ->
                 val intent = android.content.Intent(requireContext(), CommentActivity::class.java)
                 intent.putExtra("EXTRA_ID", materi.id)
@@ -73,6 +74,7 @@ class SearchFragment : Fragment() {
             }
         )
 
+        recyclerViewCatalog.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewCatalog.adapter = materiAdapter
 
         loadData()
@@ -87,33 +89,40 @@ class SearchFragment : Fragment() {
                 return true
             }
         })
+
     }
 
     private fun filterData(text: String) {
-        val filteredList = ArrayList<MateriModel>()
-        for (item in originalList) {
-            if (item.title.lowercase(java.util.Locale.getDefault()).contains(text.lowercase(java.util.Locale.getDefault())) ||
-                item.category.lowercase(java.util.Locale.getDefault()).contains(text.lowercase(java.util.Locale.getDefault()))
-            ) {
-                filteredList.add(item)
-            }
+        if (text.isBlank()) {
+            materiAdapter.updateData(originalList)
+            return
         }
-        materiAdapter.updateData(filteredList)
+        val filteredList = originalList.filter {
+
+            it.title.contains(text, ignoreCase = true) || it.category.contains(text, ignoreCase = true)
+        }
+        materiAdapter.updateData(ArrayList(filteredList))
     }
 
     private fun loadData() {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+
+                android.util.Log.d("SEARCH", "Jumlah child = ${snapshot.childrenCount}")
                 originalList.clear()
-                displayList.clear()
+
                 for (dataSnapshot in snapshot.children) {
-                    val materi = dataSnapshot.getValue<MateriModel>()
+
+                    val materi = dataSnapshot.getValue(MateriModel::class.java)
+                    android.util.Log.d("SEARCH", "Materi = $materi")
+
                     if (materi != null) {
+                        materi.id = dataSnapshot.key ?: ""
                         originalList.add(materi)
-                        displayList.add(materi)
                     }
                 }
-                materiAdapter.updateData(displayList)
+                android.util.Log.d("SEARCH", "Total List = ${originalList.size}")
+                materiAdapter.updateData(ArrayList(originalList))
             }
 
             override fun onCancelled(error: DatabaseError) {

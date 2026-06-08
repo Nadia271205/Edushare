@@ -6,6 +6,7 @@
     <application
         android:name=".EduShareApp"
         android:allowBackup="true"
+        android:windowSoftInputMode="adjustResize"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,8 +14,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo_aplikasi"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Edushare"
-        android:windowSoftInputMode="stateUnchanged|adjustPan">
+        android:theme="@style/Theme.Edushare">
         <activity
             android:name=".CommentActivity"
             android:exported="false" />

@@ -49,7 +49,6 @@ class ProfileFragment : Fragment() {
 
         loadProfile()
 
-
         val btnLogout = view.findViewById<Button>(R.id.bt_logout)
 
         btnLogout.setOnClickListener {
