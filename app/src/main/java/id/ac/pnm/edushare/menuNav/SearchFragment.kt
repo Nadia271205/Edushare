@@ -58,6 +58,8 @@ class SearchFragment : Fragment() {
                 intent.putExtra("EXTRA_TITLE", materi.title)
                 intent.putExtra("EXTRA_DESC", materi.description)
                 intent.putExtra("EXTRA_AUTHOR", materi.uploaderName)
+                intent.putExtra("EXTRA_IMAGE_URL", materi.fileUrl)
+                intent.putExtra("EXTRA_CATEGORY", materi.category)
                 startActivity(intent)
             },
             { materi ->

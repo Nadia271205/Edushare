@@ -24,7 +24,7 @@
             android:text="Cari Materi 📚"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:textColor="#005BBF"/>
+            android:textColor="#1E293B"/>
 
         <TextView
             android:layout_width="wrap_content"
