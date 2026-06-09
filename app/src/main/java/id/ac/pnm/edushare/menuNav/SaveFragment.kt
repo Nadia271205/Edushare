@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.ac.pnm.edushare.CommentActivity
 import id.ac.pnm.edushare.EduShareApp
@@ -20,6 +22,7 @@ class SaveFragment : Fragment() {
 
     private lateinit var recyclerViewSaved: RecyclerView
     private lateinit var materiAdapter: MateriAdapter
+    private lateinit var tvSavedCount: TextView
     private var savedList = ArrayList<MateriModel>()
 
     override fun onCreateView(
@@ -33,7 +36,9 @@ class SaveFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerViewSaved = view.findViewById(R.id.recyclerViewSaved)
-        recyclerViewSaved.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+        recyclerViewSaved.layoutManager = LinearLayoutManager(requireContext())
+        tvSavedCount = view.findViewById<TextView>(R.id.tvSavedCount)
+
 
         materiAdapter = MateriAdapter(
             savedList,
@@ -43,6 +48,8 @@ class SaveFragment : Fragment() {
                 intent.putExtra("EXTRA_TITLE", materi.title)
                 intent.putExtra("EXTRA_DESC", materi.description)
                 intent.putExtra("EXTRA_AUTHOR", materi.uploaderName)
+                intent.putExtra("EXTRA_IMAGE_URL", materi.fileUrl)
+                intent.putExtra("EXTRA_CATEGORY", materi.category)
                 startActivity(intent)
             },
             { materi ->
@@ -61,6 +68,8 @@ class SaveFragment : Fragment() {
             val data = db.materiDao().getAll()
             withContext(Dispatchers.Main) {
                 materiAdapter.updateData(data)
+
+                tvSavedCount.text = "${data.size} materi tersimpan"
             }
         }
     }
