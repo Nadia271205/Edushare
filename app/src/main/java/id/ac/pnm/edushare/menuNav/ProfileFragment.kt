@@ -9,14 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import id.ac.pnm.edushare.EduShareApp
 import id.ac.pnm.edushare.LoginActivity
 import id.ac.pnm.edushare.R
+import id.ac.pnm.edushare.data.MateriModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileFragment : Fragment() {
 
@@ -27,6 +34,9 @@ class ProfileFragment : Fragment() {
     private lateinit var tvEmail: TextView
     private lateinit var tvKelas: TextView
     private lateinit var tvSekolah: TextView
+
+    private lateinit var tvUploadCount: TextView
+    private lateinit var tvSavedCount: TextView
 
 
     override fun onCreateView(
@@ -47,15 +57,20 @@ class ProfileFragment : Fragment() {
         tvKelas = view.findViewById<TextView>(R.id.tvKelasValue)
         tvSekolah = view.findViewById<TextView>(R.id.tvSekolahValue)
 
-        loadProfile()
+        tvUploadCount = view.findViewById(R.id.tvUploadCount)
+        tvSavedCount = view.findViewById(R.id.tvSavedCount)
 
-        val btnLogout = view.findViewById<Button>(R.id.bt_logout)
+        loadProfile()
+        loadUploadCount()
+        loadSavedCount()
+
+        val btnLogout = view.findViewById<MaterialButton>(R.id.bt_logout)
 
         btnLogout.setOnClickListener {
             auth.signOut()
 
-
             val intent = Intent(requireActivity(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             requireActivity().finish()
 
@@ -71,7 +86,7 @@ class ProfileFragment : Fragment() {
             .getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app")
             .getReference("Users").child(uid)
 
-        database.addValueEventListener(object: ValueEventListener {
+        database.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
 
@@ -89,6 +104,49 @@ class ProfileFragment : Fragment() {
             }
 
         })
+    }
+
+    private fun loadUploadCount() {
+        val uid = auth.currentUser?.uid ?: return
+
+        FirebaseDatabase
+            .getInstance("https://edushare-8-trpl-a-default-rtdb.asia-southeast1.firebasedatabase.app")
+            .getReference("Tugas")
+            .addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    var count = 0
+
+                    for (child in snapshot.children) {
+                        val materi = child.getValue(MateriModel::class.java)
+
+                        if (materi?.uploaderUid == uid) {
+                            count++
+                        }
+                    }
+
+                    tvUploadCount.text = count.toString()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("ProfileFragment", error.message)
+                }
+
+            })
+    }
+
+    private fun loadSavedCount() {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val totalSaved = EduShareApp.db
+                .materiDao()
+                .getAll()
+                .size
+
+            withContext(Dispatchers.Main) {
+                tvSavedCount.text = totalSaved.toString()
+            }
+        }
     }
 }
 
